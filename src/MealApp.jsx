@@ -272,24 +272,19 @@ function MealApp() {
 
       if (detail) {
         setDetail(null);
-        backWarningRef.current = false;
-        window.history.pushState({ app: true }, "");
+        // 히스토리 엔트리는 팝업 열 때 push된 것이 소비됨 → 재push 불필요
         return;
       }
       if (rolling || rollResult) {
         setRolling(false);
         setRollResult(null);
-        backWarningRef.current = false;
-        window.history.pushState({ app: true }, "");
         return;
       }
       if (currentPath.length > 0) {
         setPaths((prev) => ({ ...prev, [tab]: prev[tab].slice(0, -1) }));
-        backWarningRef.current = false;
-        window.history.pushState({ app: true }, "");
         return;
       }
-      // 최상위: 첫 번째 뒤로가기는 경고 토스트, 두 번째는 실제 종료
+      // 최상위: 첫 번째 → 경고 토스트 + 1회용 엔트리 push, 두 번째 → 실제 종료
       if (!backWarningRef.current) {
         backWarningRef.current = true;
         setBackToast(true);
@@ -298,9 +293,9 @@ function MealApp() {
           backWarningRef.current = false;
           setBackToast(false);
         }, 2000);
-        window.history.pushState({ app: true }, "");
+        window.history.pushState({ app: true }, ""); // 경고 후 한 번 더 잡기 위한 엔트리
       }
-      // backWarning이 true인 상태에서 다시 누르면 pushState 안 함 → 브라우저가 실제로 나감
+      // backWarning true인 상태 → push 안 함 → 브라우저가 실제로 나감
     }
 
     window.addEventListener("popstate", onPopState);
@@ -365,6 +360,7 @@ function MealApp() {
   function doRandom() {
     const pool = randomPool();
     if (pool.length === 0) return;
+    const isRetry = !!rollResult; // 다시 누른 경우 → 히스토리 엔트리 재사용
     setRolling(true);
     setRollResult(null);
     let i = 0;
@@ -379,6 +375,7 @@ function MealApp() {
         const final = pool[Math.floor(Math.random() * pool.length)];
         setRollResult(final);
         setRolling(false);
+        if (!isRetry) window.history.pushState({ app: true }, ""); // 첫 결과에만 push
         return;
       }
       setTimeout(step, delay);
@@ -387,7 +384,7 @@ function MealApp() {
   }
 
   function goBack() {
-    setPath((p) => p.slice(0, -1));
+    window.history.back(); // popstate를 통해 처리 (하드웨어 뒤로가기와 동일 경로)
   }
 
   // 링크 버튼 문구: 집밥은 레시피, 배달/외식은 바로가기
@@ -443,7 +440,7 @@ function MealApp() {
       {/* 본문 */}
       <div style={{ flex: 1, overflowY: "auto", padding: "12px 20px 90px" }}>
         {view.type === "cats" && view.items.map((c) => (
-          <Card key={c.key} onClick={() => setPath([c.key])}>
+          <Card key={c.key} onClick={() => { setPath([c.key]); window.history.pushState({ app: true }, ""); }}>
             <span style={{ fontSize: 26, marginRight: 14 }}>{c.icon}</span>
             <span style={{ fontSize: 17, fontWeight: 700 }}>{c.key}</span>
             <span style={{ marginLeft: "auto", color: "#C5C8CE", fontSize: 20 }}>›</span>
@@ -451,7 +448,7 @@ function MealApp() {
         ))}
 
         {view.type === "subcats" && view.items.map((s) => (
-          <Card key={s.key} onClick={() => setPath([view.parent, s.key])}>
+          <Card key={s.key} onClick={() => { setPath([view.parent, s.key]); window.history.pushState({ app: true }, ""); }}>
             <span style={{ fontSize: 26, marginRight: 14 }}>{s.icon}</span>
             <span style={{ fontSize: 17, fontWeight: 700 }}>{s.label || s.key}</span>
             <span style={{ marginLeft: "auto", color: "#C5C8CE", fontSize: 20 }}>›</span>
@@ -459,7 +456,7 @@ function MealApp() {
         ))}
 
         {view.type === "menus" && view.items.map((m, idx) => (
-          <MenuCard key={idx} m={m} accent={accent} onClick={() => setDetail(m)} linkBadge={linkBadge} />
+          <MenuCard key={idx} m={m} accent={accent} onClick={() => { setDetail(m); window.history.pushState({ app: true }, ""); }} linkBadge={linkBadge} />
         ))}
       </div>
 
@@ -524,7 +521,7 @@ function MealApp() {
                   background: "white", color: accent, fontWeight: 700, fontSize: 15,
                   cursor: "pointer", fontFamily: "inherit",
                 }}>다시</button>
-                <button onClick={() => { const r = rollResult; setRollResult(null); setDetail(r); }} style={{
+                <button onClick={() => { const r = rollResult; setRollResult(null); setDetail(r); /* 엔트리 재사용, push 없음 */ }} style={{
                   flex: 1, padding: "13px", borderRadius: 14, border: "none",
                   background: accent, color: "white", fontWeight: 700, fontSize: 15,
                   cursor: "pointer", fontFamily: "inherit",
