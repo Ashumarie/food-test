@@ -1,3 +1,4 @@
+import React, { useState, useRef, useEffect } from "react";
 const MENUS = [
   {
     "name": "낫또",
