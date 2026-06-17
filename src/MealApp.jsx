@@ -700,7 +700,7 @@ const MENUS = [
     "ingredients": "한식 코스"
   },
   {
-    "name": "모남페티",
+    "name": "몬안베띠",
     "group": "외식",
     "cat": "식당",
     "ingredients": "베트남 음식"
