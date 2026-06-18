@@ -462,7 +462,7 @@ function MealApp() {
         display: "flex", padding: "8px 0 max(8px, env(safe-area-inset-bottom))",
       }}>
         {TABS.map((t) => (
-          <button key={t.key} onClick={() => setTab(t.key)} style={{
+          <button key={t.key} onClick={() => { setTab(t.key); setPath([]); setDetail(null); setRolling(false); setRollResult(null); }} style={{
             flex: 1, border: "none", background: "none", cursor: "pointer",
             display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
             padding: "6px 0", fontFamily: "inherit",
