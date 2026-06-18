@@ -237,28 +237,21 @@ const TABS = [
 
 function MealApp() {
   const [tab, setTab] = useState("집밥");
-  // 탭별 드릴다운 경로 유지 (탭 전환 시 초기화 안 함)
-  const [paths, setPaths] = useState({ 집밥: [], 배달: [], 외식: [] });
+  const [path, setPath] = useState([]);
   const [detail, setDetail] = useState(null);
   const [rolling, setRolling] = useState(false);
   const [rollResult, setRollResult] = useState(null);
   const [backToast, setBackToast] = useState(false);
 
-  const path = paths[tab];
-
-  function setPath(updater) {
-    setPaths((prev) => ({
-      ...prev,
-      [tab]: typeof updater === "function" ? updater(prev[tab]) : updater,
-    }));
-  }
+  // 탭 전환 시 경로 초기화
+  useEffect(() => { setPath([]); }, [tab]);
 
   const accent = "#FF6B35";
   const accentSoft = "#FFF1EB";
 
   // popstate 핸들러 안에서 최신 state를 참조하기 위한 ref
   const stateRef = useRef({});
-  stateRef.current = { detail, rolling, rollResult, paths, tab };
+  stateRef.current = { detail, rolling, rollResult, path, tab };
   const backWarningRef = useRef(false);
   const backToastTimer = useRef(null);
 
@@ -267,8 +260,7 @@ function MealApp() {
     window.history.pushState({ app: true }, "");
 
     function onPopState() {
-      const { detail, rolling, rollResult, paths, tab } = stateRef.current;
-      const currentPath = paths[tab];
+      const { detail, rolling, rollResult, path: currentPath } = stateRef.current;
 
       if (detail) {
         setDetail(null);
@@ -281,7 +273,7 @@ function MealApp() {
         return;
       }
       if (currentPath.length > 0) {
-        setPaths((prev) => ({ ...prev, [tab]: prev[tab].slice(0, -1) }));
+        setPath((p) => p.slice(0, -1));
         return;
       }
       // 최상위: 첫 번째 → 경고 토스트 + 1회용 엔트리 push, 두 번째 → 실제 종료
