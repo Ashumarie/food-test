@@ -174,7 +174,7 @@ const MENUS = [
   { "name": "에베레스트", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "카레, 챠오미엔" },
   { "name": "미우야", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "우동, 소바" },
   { "name": "늘푸른목장", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "소고기" },
-  { "name": "콴안다오", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "베트남 음식, 유명한 곳", "link": "https://web.coupangeats.com/share?storeId=1019156&dishId&key=75b671a8-b804-48df-b074-520688e6b535" },
+  { "name": "콴안다오", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "베트남 음식, 유명한 곳", "link": "https://kko.to/Tvknwb81rX" },
   { "name": "티티그릴", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "태국 음식, 뿌빳퐁커리", "link": "https://kko.to/daMpSyR5jq" },
   { "name": "옥된장", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "교대, 된장 전골", "link": "https://kko.to/nzCV2w8TMm" },
   { "name": "칠백한우국밥", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "한우국밥, 육회비빔밥", "link": "https://kko.to/AgO8JU6zQT" },
