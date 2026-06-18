@@ -160,10 +160,10 @@ const MENUS = [
   { "name": "김영희 아구찜", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "아구찜" },
   { "name": "서래향", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "중국집" },
   { "name": "서래쭈꾸미", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "쭈꾸미" },
-  { "name": "야미도", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "일식집, 알밥", "link": "https://naver.me/FKxIzJRf" },
   { "name": "무샤", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "이자카야" },
-  { "name": "밀화", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "쌈밥정식, 불고기전골", "link": "https://kko.to/SwFYSt0GVh" },
   { "name": "화니", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "고등어구이, 비빔밥" },
+  { "name": "야미도", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "일식집, 알밥", "link": "https://naver.me/FKxIzJRf" },
+  { "name": "밀화", "group": "외식", "cat": "집 근처", "tags": [], "ingredients": "쌈밥정식, 불고기전골", "link": "https://kko.to/SwFYSt0GVh" },
 
   // ───────── 외식 · 차 타고 ─────────
   { "name": "은희네해장국", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "선지해장국" },
