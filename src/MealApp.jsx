@@ -407,7 +407,7 @@ function MealApp() {
           }}>← 뒤로</button>
         )}
         <div style={{ fontSize: 13, fontWeight: 600, color: "#B0B8C1", letterSpacing: -0.2 }}>
-          오늘 뭐 먹지?
+          오늘뭐먹지
         </div>
         <div style={{ fontSize: 27, fontWeight: 800, letterSpacing: -0.6, marginTop: 2 }}>
           {headerTitle()}
