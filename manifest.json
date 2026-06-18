@@ -1,0 +1,9 @@
+{
+  "name": "우리집 식단",
+  "short_name": "오늘 뭐 먹지?",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAFA",
+  "theme_color": "#FF6B35",
+  "orientation": "portrait"
+}
