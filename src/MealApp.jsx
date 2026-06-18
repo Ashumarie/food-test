@@ -595,9 +595,17 @@ function MenuCard({ m, accent, onClick, linkBadge }) {
           <span style={{ fontSize: 16, fontWeight: 700 }}>{m.name}</span>
           {m.link && <span style={{ marginLeft: 8, fontSize: 12, color: accent, fontWeight: 700 }}>{linkBadge(m)}</span>}
         </div>
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8, minHeight: 22 }}>
-          {m.tags?.map((t) => <Tag key={t} t={t} />)}
-        </div>
+        {m.group === "집밥" ? (
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8, minHeight: 22 }}>
+            {m.tags?.map((t) => <Tag key={t} t={t} />)}
+          </div>
+        ) : (
+          m.tags?.length > 0 && (
+            <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
+              {m.tags.map((t) => <Tag key={t} t={t} />)}
+            </div>
+          )
+        )}
       </div>
       <span style={{ color: "#C5C8CE", fontSize: 18 }}>{hasMore ? "›" : ""}</span>
     </div>
