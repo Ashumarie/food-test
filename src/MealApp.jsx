@@ -399,26 +399,29 @@ function MealApp() {
       display: "flex", flexDirection: "column", position: "relative", color: "#191F28",
     }}>
       {/* 상단 헤더 */}
-      <div style={{ padding: "22px 20px 8px" }}>
-        {path.length > 0 && (
+      <div style={{ padding: "22px 20px 16px" }}>
+        {path.length === 0 ? (
+          <div style={{ fontSize: 15, fontWeight: 600, color: "#B0B8C1", letterSpacing: -0.2, marginBottom: 14 }}>
+            오늘뭐먹지
+          </div>
+        ) : (
           <button onClick={goBack} style={{
             border: "none", background: "none", fontSize: 15, color: "#8B95A1",
-            padding: 0, marginBottom: 10, cursor: "pointer", fontWeight: 600,
+            padding: 0, marginBottom: 14, cursor: "pointer", fontWeight: 600,
           }}>← 뒤로</button>
         )}
-        <div style={{ fontSize: 13, fontWeight: 600, color: "#B0B8C1", letterSpacing: -0.2 }}>
-          오늘뭐먹지
+        <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
+          <div style={{ fontSize: 27, fontWeight: 800, letterSpacing: -0.6 }}>
+            {headerTitle()}
+          </div>
+          {view.type === "menus" && (
+            <div style={{ fontSize: 14, color: "#8B95A1" }}>{view.items.length}개</div>
+          )}
         </div>
-        <div style={{ fontSize: 27, fontWeight: 800, letterSpacing: -0.6, marginTop: 2 }}>
-          {headerTitle()}
-        </div>
-        {view.type === "menus" && (
-          <div style={{ fontSize: 14, color: "#8B95A1", marginTop: 4 }}>{view.items.length}개</div>
-        )}
       </div>
 
       {/* 랜덤 버튼 */}
-      <div style={{ padding: "8px 20px 4px" }}>
+      <div style={{ padding: "4px 20px 4px" }}>
         <button onClick={doRandom} disabled={rolling} style={{
           width: "100%", padding: "15px", borderRadius: 16, border: "none",
           background: accent, color: "white", fontSize: 16, fontWeight: 700,
@@ -592,11 +595,9 @@ function MenuCard({ m, accent, onClick, linkBadge }) {
           <span style={{ fontSize: 16, fontWeight: 700 }}>{m.name}</span>
           {m.link && <span style={{ marginLeft: 8, fontSize: 12, color: accent, fontWeight: 700 }}>{linkBadge(m)}</span>}
         </div>
-        {m.tags?.length > 0 && (
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8 }}>
-            {m.tags.map((t) => <Tag key={t} t={t} />)}
-          </div>
-        )}
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginTop: 8, minHeight: 22 }}>
+          {m.tags?.map((t) => <Tag key={t} t={t} />)}
+        </div>
       </div>
       <span style={{ color: "#C5C8CE", fontSize: 18 }}>{hasMore ? "›" : ""}</span>
     </div>
