@@ -1,43 +1,52 @@
 import React, { useState, useRef, useEffect } from "react";
 
 const MENUS = [
-  // ───────── 집밥 · 아침 · 단품 ─────────
-  { "name": "삶은 달걀", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화", "단백질"] },
-  { "name": "샐러리", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화"] },
-  { "name": "견과류 (믹스·호두)", "group": "집밥", "cat": "아침단품", "tags": ["당뇨친화"] },
-  { "name": "연두부", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화", "단백질"] },
-  { "name": "과일 (바나나·사과·망고·블루베리)", "group": "집밥", "cat": "아침단품", "tags": ["소화편함"] },
-  { "name": "채소찜 (단호박·양배추)", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화"] },
-  { "name": "그릭요거트 + 올리브오일", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화", "단백질"] },
-  { "name": "방울토마토", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화"] },
-  { "name": "두유", "group": "집밥", "cat": "아침단품", "tags": ["당뇨친화", "단백질"] },
-  { "name": "저지방 우유", "group": "집밥", "cat": "아침단품", "tags": ["단백질"] },
-  { "name": "아보카도", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화"] },
-  { "name": "파프리카", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화"] },
-  { "name": "낫또", "group": "집밥", "cat": "아침단품", "tags": ["소화편함", "당뇨친화", "단백질"] },
-  { "name": "땅콩버터", "group": "집밥", "cat": "아침단품", "tags": ["단백질"] },
+  // ───────── 집밥 · 소화 · 간단히(단품) ─────────
+  { "name": "삶은 달걀", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "샐러리", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
+  { "name": "견과류 (믹스·호두)", "group": "집밥", "cat": "간단히(단품)", "tags": ["당뇨친화"] },
+  { "name": "연두부", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "과일 (바나나·사과·망고·블루베리)", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함"] },
+  { "name": "채소찜 (단호박·양배추)", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
+  { "name": "그릭요거트 + 올리브오일", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "방울토마토", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
+  { "name": "두유", "group": "집밥", "cat": "간단히(단품)", "tags": ["당뇨친화", "단백질"] },
+  { "name": "저지방 우유", "group": "집밥", "cat": "간단히(단품)", "tags": ["단백질"] },
+  { "name": "아보카도", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
+  { "name": "파프리카", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
+  { "name": "낫또", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "땅콩버터", "group": "집밥", "cat": "간단히(단품)", "tags": ["단백질"] },
+  { "name": "쌀과자", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함"] },
+  { "name": "블루베리요거트", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "단백질"] },
+  { "name": "식빵", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함"] },
+  { "name": "감자", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함"] },
+  { "name": "가자미", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
 
-  // ───────── 집밥 · 아침 · 요리 ─────────
-  { "name": "그릭요거트 잼 샌드위치", "group": "집밥", "cat": "아침요리", "tags": ["단백질"] },
+  // ───────── 집밥 · 소화 · 요리 ─────────
+  { "name": "그릭요거트 잼 샌드위치", "group": "집밥", "cat": "요리", "tags": ["단백질"] },
   {
-    "name": "계란 토마토 전", "group": "집밥", "cat": "아침요리",
+    "name": "계란 토마토 전", "group": "집밥", "cat": "요리",
     "tags": ["소화편함", "당뇨친화", "단백질"],
     "ingredients": "계란 4개, 올리브오일, (방울)토마토 1개, 모짜렐라 치즈",
     "link": "https://www.youtube.com/shorts/MPfr2DnpcNs"
   },
   {
-    "name": "달걀 샐러드", "group": "집밥", "cat": "아침요리",
+    "name": "달걀 샐러드", "group": "집밥", "cat": "요리",
     "tags": ["소화편함", "당뇨친화", "단백질"],
     "ingredients": "쪽파(대파), 당근, 커리파우더 1큰술, 소금, 계란 4개, 후추, 올리브오일, 홀그레인 머스타드 1작은술",
     "link": "https://www.youtube.com/watch?v=dy4FSxfxGQo"
   },
   {
-    "name": "토마토달걀커리볶음", "group": "집밥", "cat": "아침요리",
+    "name": "토마토달걀커리볶음", "group": "집밥", "cat": "요리",
     "tags": ["소화편함", "당뇨친화", "단백질"],
     "ingredients": "토마토 3개, 유정란 3개, 커리 파우더 1/2 큰술, 다진마늘 1/2 큰술, 올리브오일 1큰술, 대파 또는 쪽파",
     "link": "https://www.youtube.com/shorts/Z4xyWdEG_xU"
   },
-  { "name": "팽이버섯 양파 볶음", "group": "집밥", "cat": "아침요리", "tags": ["소화편함", "당뇨친화"] },
+  { "name": "팽이버섯 양파 볶음", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화"] },
+  { "name": "대구탕", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "된장찌개", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "소고기국", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "추어탕", "group": "집밥", "cat": "요리", "tags": ["소화편함", "단백질"] },
 
   // ───────── 집밥 · 반찬 ─────────
   { "name": "오뎅볶음", "group": "집밥", "cat": "반찬", "tags": [] },
@@ -188,9 +197,9 @@ const MENUS = [
 
 const HOME_CATS = [
   {
-    key: "아침", icon: "🌅", children: [
-      { key: "아침단품", label: "간단히 (단품)", icon: "🍙" },
-      { key: "아침요리", label: "요리해서", icon: "🍳" },
+    key: "소화", icon: "胃", children: [
+      { key: "간단히(단품)", label: "간단히(단품)", icon: "🍙" },
+      { key: "요리", label: "요리", icon: "🍳" },
     ],
   },
   { key: "반찬", icon: "🥗" },
@@ -215,12 +224,12 @@ const DINING_CATS = [
 const GROUP_CATS = { 집밥: HOME_CATS, 배달: DELIVERY_CATS, 외식: DINING_CATS };
 
 const CAT_EMOJI = {
-  아침단품: "🍙", 아침요리: "🍳", 반찬: "🥗", 국찌개: "🍲", 고기반찬: "🥩", 일품메뉴: "🍱",
+  "간단히(단품)": "🍙", "요리": "🍳", 반찬: "🥗", 국찌개: "🍲", 고기반찬: "🥩", 일품메뉴: "🍱",
   한식: "🥘", "양식/중식": "🍝", "샌드위치/포케": "🥪", 일식: "🍣", 기타: "🥙",
   "집 근처": "🚶", "차 타고": "🚗",
 };
 
-const SUB_LABEL = { 아침단품: "간단히 (단품)", 아침요리: "요리해서" };
+const SUB_LABEL = { "간단히(단품)": "간단히(단품)", 요리: "요리" };
 
 const TAG_COLORS = {
   소화편함: { bg: "#E7F6EC", fg: "#1A8245" },
@@ -316,7 +325,7 @@ function MealApp() {
     if (path.length === 0) {
       return tab === "집밥" ? "밥 뭐하지?" : tab === "배달" ? "뭐 시키지?" : "어디 가지?";
     }
-    if (tab === "집밥" && path[0] === "아침" && path.length === 1) return "아침, 어떻게?";
+    if (tab === "집밥" && path[0] === "소화" && path.length === 1) return "소화 잘 되는 음식";
     const last = path[path.length - 1];
     return SUB_LABEL[last] || last;
   }
@@ -327,7 +336,7 @@ function MealApp() {
     const cats = GROUP_CATS[tab];
     const top = path[0];
     const catDef = cats.find((c) => c.key === top);
-    // 아침 같이 children이 있는 중간 단계: 하위 전체
+    // 소화처럼 children이 있는 중간 단계: 하위 전체
     if (catDef?.children && path.length === 1) {
       return catDef.children.flatMap((child) =>
         MENUS.filter((m) => m.group === tab && m.cat === child.key)
@@ -343,7 +352,9 @@ function MealApp() {
     const cats = GROUP_CATS[tab];
     const top = path[0];
     const catDef = cats.find((c) => c.key === top);
-    if (catDef?.children && path.length === 1) return `${top} 랜덤으로 정하기`;
+    if (catDef?.children && path.length === 1) {
+      return top === "소화" ? "랜덤으로 정하기" : `${top} 랜덤으로 정하기`;
+    }
     const leaf = path[path.length - 1];
     const label = SUB_LABEL[leaf] || leaf;
     return `${label} 랜덤으로 정하기`;
