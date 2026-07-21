@@ -2,7 +2,6 @@ import React, { useState, useRef, useEffect } from "react";
 
 const MENUS = [
   // ───────── 집밥 · 소화 · 간단히(단품) ─────────
-  { "name": "삶은 달걀", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
   { "name": "샐러리", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
   { "name": "견과류 (믹스·호두)", "group": "집밥", "cat": "간단히(단품)", "tags": ["당뇨친화"] },
   { "name": "연두부", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
@@ -11,7 +10,7 @@ const MENUS = [
   { "name": "그릭요거트 + 올리브오일", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
   { "name": "방울토마토", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
   { "name": "두유", "group": "집밥", "cat": "간단히(단품)", "tags": ["당뇨친화", "단백질"] },
-  { "name": "저지방 우유", "group": "집밥", "cat": "간단히(단품)", "tags": ["단백질"] },
+  { "name": "단백질 음료", "group": "집밥", "cat": "간단히(단품)", "tags": ["단백질"] },
   { "name": "아보카도", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
   { "name": "파프리카", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화"] },
   { "name": "낫또", "group": "집밥", "cat": "간단히(단품)", "tags": ["소화편함", "당뇨친화", "단백질"] },
@@ -24,29 +23,14 @@ const MENUS = [
 
   // ───────── 집밥 · 소화 · 요리 ─────────
   { "name": "그릭요거트 잼 샌드위치", "group": "집밥", "cat": "요리", "tags": ["단백질"] },
-  {
-    "name": "계란 토마토 전", "group": "집밥", "cat": "요리",
-    "tags": ["소화편함", "당뇨친화", "단백질"],
-    "ingredients": "계란 4개, 올리브오일, (방울)토마토 1개, 모짜렐라 치즈",
-    "link": "https://www.youtube.com/shorts/MPfr2DnpcNs"
-  },
-  {
-    "name": "달걀 샐러드", "group": "집밥", "cat": "요리",
-    "tags": ["소화편함", "당뇨친화", "단백질"],
-    "ingredients": "쪽파(대파), 당근, 커리파우더 1큰술, 소금, 계란 4개, 후추, 올리브오일, 홀그레인 머스타드 1작은술",
-    "link": "https://www.youtube.com/watch?v=dy4FSxfxGQo"
-  },
-  {
-    "name": "토마토달걀커리볶음", "group": "집밥", "cat": "요리",
-    "tags": ["소화편함", "당뇨친화", "단백질"],
-    "ingredients": "토마토 3개, 유정란 3개, 커리 파우더 1/2 큰술, 다진마늘 1/2 큰술, 올리브오일 1큰술, 대파 또는 쪽파",
-    "link": "https://www.youtube.com/shorts/Z4xyWdEG_xU"
-  },
   { "name": "팽이버섯 양파 볶음", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화"] },
   { "name": "대구탕", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
   { "name": "된장찌개", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
   { "name": "소고기국", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
   { "name": "추어탕", "group": "집밥", "cat": "요리", "tags": ["소화편함", "단백질"] },
+  { "name": "야채죽", "group": "집밥", "cat": "요리", "tags": ["소화편함"] },
+  { "name": "두부조림", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
+  { "name": "토마토 계란스크램블", "group": "집밥", "cat": "요리", "tags": ["소화편함", "당뇨친화", "단백질"] },
 
   // ───────── 집밥 · 반찬 ─────────
   { "name": "오뎅볶음", "group": "집밥", "cat": "반찬", "tags": [] },
@@ -116,14 +100,10 @@ const MENUS = [
   // ───────── 배달 · 한식 ─────────
   { "name": "추오정 추어탕", "group": "배달", "cat": "한식", "tags": [], "ingredients": "추어탕" },
   { "name": "회사 주변 갈비탕", "group": "배달", "cat": "한식", "tags": [], "ingredients": "갈비탕/갈비찜" },
-  { "name": "작은공간", "group": "배달", "cat": "한식", "tags": [], "ingredients": "떡볶이" },
-  { "name": "하루끼우동", "group": "배달", "cat": "한식", "tags": [], "ingredients": "우동, 김치볶음밥" },
   { "name": "부찌남", "group": "배달", "cat": "한식", "tags": [], "ingredients": "부대찌개" },
-  { "name": "한지박", "group": "배달", "cat": "한식", "tags": [], "ingredients": "닭볶음탕", "link": "https://web.coupangeats.com/share?storeId=127048&dishId&key=1a4a5d83-4fd3-448d-8c81-9630d357a29e" },
   { "name": "영일만 막회물회", "group": "배달", "cat": "한식", "tags": [], "ingredients": "물회, 회덮밥", "link": "https://web.coupangeats.com/share?storeId=1008286&dishId&key=c20b9551-747f-410f-a49a-1cca0fff90f9" },
-  { "name": "청실홍실", "group": "배달", "cat": "한식", "tags": [], "ingredients": "감자국(탕), 성시경의 먹을텐데 출연", "link": "https://web.coupangeats.com/share?storeId=716887&dishId&key=254de91c-ad2b-4d5a-978b-76712c64b33d" },
-  { "name": "3대 삼계장인", "group": "배달", "cat": "한식", "tags": [], "ingredients": "잣 삼계탕, 미쉐린 빕구르망", "link": "https://web.coupangeats.com/share?storeId=101727&dishId&key=924eee34-a6ae-410d-82e1-acebcbbb24ee" },
   { "name": "순남시래기", "group": "배달", "cat": "한식", "tags": [], "ingredients": "시래기국, 수육정식", "link": "https://web.coupangeats.com/share?storeId=178356&dishId&key=556db40f-1b7f-4bc5-a57d-1e8d7e59b115" },
+  { "name": "산들해", "group": "배달", "cat": "한식", "tags": [], "ingredients": "한식 코스" },
 
   // ───────── 배달 · 양식/중식 ─────────
   { "name": "잭슨피자", "group": "배달", "cat": "양식/중식", "tags": [], "ingredients": "피자" },
@@ -134,28 +114,20 @@ const MENUS = [
   { "name": "피에프창", "group": "배달", "cat": "양식/중식", "tags": [], "ingredients": "중식, 볶음밥" },
   { "name": "사현스낵", "group": "배달", "cat": "양식/중식", "tags": [], "ingredients": "라오깐마볶음밥, 완탕", "link": "https://web.coupangeats.com/share?storeId=171456&dishId&key=eed1a154-d442-43da-a776-d91367ce90b4" },
   { "name": "피그닉", "group": "배달", "cat": "양식/중식", "tags": [], "ingredients": "포크 라이스 볼, 바베큐", "link": "https://web.coupangeats.com/share?storeId=163017&dishId&key=4e30a410-a8ac-4a50-a746-1b3a7b5aad37" },
-  { "name": "버팔로스팟", "group": "배달", "cat": "양식/중식", "tags": [], "ingredients": "버팔로윙", "link": "https://web.coupangeats.com/share?storeId=480544&dishId&key=4e1756ee-a7a9-4e77-8f62-0956e3f26755" },
 
   // ───────── 배달 · 샌드위치/포케 ─────────
   { "name": "훅트포케", "group": "배달", "cat": "샌드위치/포케", "tags": [], "ingredients": "포케" },
-  { "name": "써니테르", "group": "배달", "cat": "샌드위치/포케", "tags": [], "ingredients": "빵 맛있는 샌드위치 집", "link": "https://web.coupangeats.com/share?storeId=645618&dishId&key=40cd122a-e85b-443c-bf76-4ac9f9aa50fc" },
-  { "name": "블루엣", "group": "배달", "cat": "샌드위치/포케", "tags": [], "ingredients": "치킨 샌드위치", "link": "https://web.coupangeats.com/share?storeId=481657&dishId&key=5aeacd41-a25a-4b35-b281-998dd6fbe1df" },
 
   // ───────── 배달 · 일식 ─────────
   { "name": "쿠마카레야", "group": "배달", "cat": "일식", "tags": [], "ingredients": "버섯크림카레" },
   { "name": "카이센동 우니도", "group": "배달", "cat": "일식", "tags": [], "ingredients": "카이센동, 사케동" },
-  { "name": "우동명가 기리야마", "group": "배달", "cat": "일식", "tags": [], "ingredients": "소갈비살덮밥, 스키야키나베우동", "link": "https://web.coupangeats.com/share?storeId=134817&dishId&key=d498e1f5-fc35-4b6c-8552-77032428e5e1" },
   { "name": "최스시", "group": "배달", "cat": "일식", "tags": [], "ingredients": "회 덮밥, 초밥, 알탕", "link": "https://web.coupangeats.com/share?storeId=430015&dishId&key=a36f9cee-50b7-4c16-a7be-d03952cebd61" },
   { "name": "스시범", "group": "배달", "cat": "일식", "tags": [], "ingredients": "스시", "link": "https://web.coupangeats.com/share?storeId=630179&dishId&key=943438f3-af79-4ee8-963c-3806087e7502" },
 
   // ───────── 배달 · 기타 ─────────
   { "name": "레몬그라스 타이", "group": "배달", "cat": "기타", "tags": [], "ingredients": "팟타이, 파인애플볶음밥" },
   { "name": "반포식스", "group": "배달", "cat": "기타", "tags": [], "ingredients": "베트남 음식, “투 스트라이크입니다”" },
-  { "name": "칵토", "group": "배달", "cat": "기타", "tags": [], "ingredients": "멕시칸, 비리야 타코", "link": "https://web.coupangeats.com/share?storeId=606509&dishId&key=6c9f3afc-195a-47cc-952f-7565d0e1b04a" },
-  { "name": "시와", "group": "배달", "cat": "기타", "tags": [], "ingredients": "이집트 요리", "link": "https://web.coupangeats.com/share?storeId=820637&dishId&key=65dd3f56-3013-4eab-989e-08604eefc4bd" },
-  { "name": "콴안다오", "group": "배달", "cat": "기타", "tags": [], "ingredients": "유명한 베트남집", "link": "https://web.coupangeats.com/share?storeId=1019156&dishId&key=75b671a8-b804-48df-b074-520688e6b535" },
   { "name": "꿍탈레", "group": "배달", "cat": "기타", "tags": [], "ingredients": "태국음식, 팟타이", "link": "https://web.coupangeats.com/share?storeId=100261&dishId&key=ee9b9cd9-d443-4b46-b87d-7a07631e9216" },
-  { "name": "뜸들이다", "group": "배달", "cat": "기타", "tags": [], "ingredients": "아보카도 계란덮밥, 삼겹살카레", "link": "https://web.coupangeats.com/share?storeId=411426&dishId&key=5c10389a-d4d9-411b-a564-5f87de6f6169" },
   { "name": "깔리", "group": "배달", "cat": "기타", "tags": [], "ingredients": "인도 커리, 리뷰 많음", "link": "https://web.coupangeats.com/share?storeId=173219&dishId&key=2cf0fdd5-764b-436f-9c84-7647403ffcef" },
   { "name": "인딕슬로우", "group": "배달", "cat": "기타", "tags": [], "ingredients": "인도 커리", "link": "https://web.coupangeats.com/share?storeId=105144&dishId&key=b845e8da-8d3e-4bbf-8b05-962a73e20004" },
 
@@ -183,7 +155,6 @@ const MENUS = [
   { "name": "에베레스트", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "카레, 챠오미엔" },
   { "name": "미우야", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "우동, 소바" },
   { "name": "늘푸른목장", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "소고기" },
-  { "name": "콴안다오", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "베트남 음식, 유명한 곳", "link": "https://kko.to/Tvknwb81rX" },
   { "name": "티티그릴", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "태국 음식, 뿌빳퐁커리", "link": "https://kko.to/daMpSyR5jq" },
   { "name": "옥된장", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "교대, 된장 전골", "link": "https://kko.to/nzCV2w8TMm" },
   { "name": "칠백한우국밥", "group": "외식", "cat": "차 타고", "tags": [], "ingredients": "한우국밥, 육회비빔밥", "link": "https://kko.to/AgO8JU6zQT" },
