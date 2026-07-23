@@ -252,8 +252,7 @@ function MealApp() {
         return;
       }
       if (rolling || rollResult) {
-        setRolling(false);
-        setRollResult(null);
+        resetRandom();
         return;
       }
       if (currentPath.length > 0) {
@@ -342,42 +341,31 @@ function MealApp() {
     const runId = randomRunRef.current + 1;
     randomRunRef.current = runId;
     const final = pool[Math.floor(Math.random() * pool.length)];
-    const spinCount = 48 + Math.floor(Math.random() * 14);
+    const spinCount = 64 + Math.floor(Math.random() * 14);
     const sequence = Array.from({ length: spinCount }, () => pool[Math.floor(Math.random() * pool.length)]);
     sequence.push(final);
+    const totalDuration = 3300;
 
     setRolling(true);
     setRollResult(null);
     setSlotSequence(sequence);
     setSlotIndex(0);
-    setSlotDuration(55);
+    setSlotDuration(0);
 
-    let i = 0;
-    function step() {
+    setTimeout(() => {
       if (randomRunRef.current !== runId) return;
-      i += 1;
-      const progress = i / (sequence.length - 1);
-      const duration = 44 + Math.pow(progress, 2.15) * 260;
-      setSlotDuration(duration);
-      setSlotIndex(i);
-      setRollResult(sequence[i]);
+      setSlotDuration(totalDuration);
+      setSlotIndex(sequence.length - 1);
+    }, 40);
 
-      if (i >= sequence.length - 1) {
-        setTimeout(() => {
-          if (randomRunRef.current !== runId) return;
-          setSlotDuration(0);
-          setSlotIndex(sequence.length - 1);
-          setRollResult(final);
-          setRolling(false);
-          if (!isRetry) window.history.pushState({ app: true }, ""); // 첫 결과에만 push
-        }, duration + 90);
-        return;
-      }
-
-      setTimeout(step, duration * 0.92);
-    }
-
-    setTimeout(step, 120);
+    setTimeout(() => {
+      if (randomRunRef.current !== runId) return;
+      setSlotDuration(0);
+      setSlotIndex(sequence.length - 1);
+      setRollResult(final);
+      setRolling(false);
+      if (!isRetry) window.history.pushState({ app: true }, ""); // 첫 결과에만 push
+    }, totalDuration + 160);
   }
 
   function resetRandom() {
@@ -636,19 +624,9 @@ function SlotMachine({ sequence, index, duration, rolling, accent }) {
           background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.20) 24%, rgba(255,255,255,0) 48%, rgba(255,255,255,0.20) 76%, rgba(255,255,255,0.96) 100%)",
         }} />
         <div style={{
-          position: "absolute",
-          left: 14,
-          right: 14,
-          top: "50%",
-          height: 1,
-          transform: "translateY(-50%)",
-          background: "linear-gradient(90deg, rgba(255,107,53,0), rgba(255,107,53,0.28), rgba(255,107,53,0))",
-          zIndex: 3,
-          pointerEvents: "none",
-        }} />
-        <div style={{
           transform: `translateY(-${safeIndex * rowHeight}px)`,
-          transition: duration > 0 ? `transform ${duration}ms cubic-bezier(0.22, 0.72, 0.18, 1)` : "none",
+          willChange: rolling ? "transform" : "auto",
+          transition: duration > 0 ? `transform ${duration}ms cubic-bezier(0.08, 0.76, 0.12, 1)` : "none",
         }}>
           {items.map((item, i) => (
             <div key={`${item.name}-${i}`} style={{
