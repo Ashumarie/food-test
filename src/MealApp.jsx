@@ -221,6 +221,9 @@ function MealApp() {
   const [detail, setDetail] = useState(null);
   const [rolling, setRolling] = useState(false);
   const [rollResult, setRollResult] = useState(null);
+  const [slotSequence, setSlotSequence] = useState([]);
+  const [slotIndex, setSlotIndex] = useState(0);
+  const [slotDuration, setSlotDuration] = useState(60);
   const [backToast, setBackToast] = useState(false);
 
   // 탭 전환 시 경로 초기화
@@ -232,6 +235,7 @@ function MealApp() {
   // popstate 핸들러 안에서 최신 state를 참조하기 위한 ref
   const stateRef = useRef({});
   stateRef.current = { detail, rolling, rollResult, path, tab };
+  const randomRunRef = useRef(0);
   const backWarningRef = useRef(false);
   const backToastTimer = useRef(null);
 
@@ -335,26 +339,64 @@ function MealApp() {
     const pool = randomPool();
     if (pool.length === 0) return;
     const isRetry = !!rollResult; // 다시 누른 경우 → 히스토리 엔트리 재사용
+    const runId = randomRunRef.current + 1;
+    randomRunRef.current = runId;
+    const final = pool[Math.floor(Math.random() * pool.length)];
+    const spinCount = 34 + Math.floor(Math.random() * 10);
+    const sequence = Array.from({ length: spinCount }, () => pool[Math.floor(Math.random() * pool.length)]);
+    sequence.push(final);
+
     setRolling(true);
     setRollResult(null);
+    setSlotSequence(sequence);
+    setSlotIndex(0);
+    setSlotDuration(55);
+
     let i = 0;
-    let delay = 50;
-    const startTime = Date.now();
     function step() {
-      setRollResult(pool[i % pool.length]);
-      i++;
-      const elapsed = Date.now() - startTime;
-      delay = 50 + Math.pow(elapsed / 1000, 2.4) * 80;
-      if (elapsed > 2600) {
-        const final = pool[Math.floor(Math.random() * pool.length)];
-        setRollResult(final);
-        setRolling(false);
-        if (!isRetry) window.history.pushState({ app: true }, ""); // 첫 결과에만 push
+      if (randomRunRef.current !== runId) return;
+      i += 1;
+      const progress = i / (sequence.length - 1);
+      const duration = 55 + Math.pow(progress, 2.65) * 360;
+      setSlotDuration(duration);
+      setSlotIndex(i);
+      setRollResult(sequence[i]);
+
+      if (i >= sequence.length - 1) {
+        setTimeout(() => {
+          if (randomRunRef.current !== runId) return;
+          setSlotDuration(0);
+          setSlotIndex(sequence.length - 1);
+          setRollResult(final);
+          setRolling(false);
+          if (!isRetry) window.history.pushState({ app: true }, ""); // 첫 결과에만 push
+        }, duration + 90);
         return;
       }
-      setTimeout(step, delay);
+
+      setTimeout(step, duration * 0.72);
     }
-    step();
+
+    setTimeout(step, 120);
+  }
+
+  function resetRandom() {
+    randomRunRef.current += 1;
+    setRolling(false);
+    setRollResult(null);
+    setSlotSequence([]);
+    setSlotIndex(0);
+    setSlotDuration(60);
+  }
+
+  function selectRandomResult() {
+    const r = rollResult;
+    resetRandom();
+    setDetail(r); // 엔트리 재사용, push 없음
+  }
+
+  function closeRandomOverlay() {
+    if (!rolling) resetRandom();
   }
 
   function goBack() {
@@ -444,7 +486,7 @@ function MealApp() {
         display: "flex", padding: "8px 0 max(8px, env(safe-area-inset-bottom))",
       }}>
         {TABS.map((t) => (
-          <button key={t.key} onClick={() => { setTab(t.key); setPath([]); setDetail(null); setRolling(false); setRollResult(null); }} style={{
+          <button key={t.key} onClick={() => { setTab(t.key); setPath([]); setDetail(null); resetRandom(); }} style={{
             flex: 1, border: "none", background: "none", cursor: "pointer",
             display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
             padding: "6px 0", fontFamily: "inherit",
@@ -469,23 +511,24 @@ function MealApp() {
 
       {/* 랜덤 결과 오버레이 */}
       {(rolling || rollResult) && (
-        <div onClick={() => !rolling && setRollResult(null)} style={{
+        <div onClick={closeRandomOverlay} style={{
           position: "fixed", inset: 0, background: "rgba(0,0,0,0.45)", zIndex: 50,
           display: "flex", alignItems: "center", justifyContent: "center", padding: 24,
         }}>
-          <div style={{
+          <div onClick={(e) => e.stopPropagation()} style={{
             background: "white", borderRadius: 24, padding: "36px 28px", width: "100%", maxWidth: 340,
             textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
           }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: accent, marginBottom: 14 }}>
-              {rolling ? "고르는 중…" : "오늘은 이거 어때요?"}
+              {rolling ? "777 JACKPOT 돌리는 중…" : "오늘은 이거 어때요?"}
             </div>
-            <div style={{
-              fontSize: 26, fontWeight: 800, letterSpacing: -0.5, minHeight: 36,
-              transition: "opacity 0.05s", opacity: rolling ? 0.85 : 1,
-            }}>
-              {rollResult?.name || "…"}
-            </div>
+            <SlotMachine
+              sequence={slotSequence}
+              index={slotIndex}
+              duration={slotDuration}
+              rolling={rolling}
+              accent={accent}
+            />
             {!rolling && rollResult?.tags?.length > 0 && (
               <div style={{ display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", marginTop: 14 }}>
                 {rollResult.tags.map((t) => <Tag key={t} t={t} />)}
@@ -498,7 +541,7 @@ function MealApp() {
                   background: "white", color: accent, fontWeight: 700, fontSize: 15,
                   cursor: "pointer", fontFamily: "inherit",
                 }}>다시</button>
-                <button onClick={() => { const r = rollResult; setRollResult(null); setDetail(r); /* 엔트리 재사용, push 없음 */ }} style={{
+                <button onClick={selectRandomResult} style={{
                   flex: 1, padding: "13px", borderRadius: 14, border: "none",
                   background: accent, color: "white", fontWeight: 700, fontSize: 15,
                   cursor: "pointer", fontFamily: "inherit",
@@ -561,6 +604,92 @@ function Card({ children, onClick }) {
       padding: "18px 18px", marginBottom: 10, cursor: "pointer",
       boxShadow: "0 1px 3px rgba(0,0,0,0.04)", border: "1px solid #F2F4F6",
     }}>{children}</div>
+  );
+}
+
+function SlotMachine({ sequence, index, duration, rolling, accent }) {
+  const rowHeight = 68;
+  const items = sequence.length > 0 ? sequence : [{ name: "…" }];
+  const safeIndex = Math.min(index, items.length - 1);
+
+  return (
+    <div style={{
+      borderRadius: 22,
+      padding: 8,
+      background: "linear-gradient(180deg, #3A261F 0%, #17110F 100%)",
+      boxShadow: `0 12px 24px rgba(255,107,53,0.18), inset 0 0 0 1px rgba(255,255,255,0.08)`,
+    }}>
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: 10,
+        marginBottom: 8,
+        color: "#FFD29F",
+        fontSize: 16,
+        fontWeight: 900,
+        letterSpacing: 1.2,
+        textShadow: "0 0 10px rgba(255,210,159,0.65)",
+      }}>
+        <span>7</span><span>7</span><span>7</span>
+      </div>
+      <div style={{
+        position: "relative",
+        height: rowHeight,
+        overflow: "hidden",
+        borderRadius: 16,
+        background: "linear-gradient(180deg, #FFF9F5 0%, #FFFFFF 45%, #FFF1EB 100%)",
+        border: `2px solid ${accent}`,
+        boxShadow: "inset 0 10px 20px rgba(25,31,40,0.08), inset 0 -10px 18px rgba(255,107,53,0.10)",
+      }}>
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          zIndex: 2,
+          pointerEvents: "none",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0) 28%, rgba(255,255,255,0) 72%, rgba(255,241,235,0.94) 100%)",
+        }} />
+        <div style={{
+          transform: `translateY(-${safeIndex * rowHeight}px)`,
+          transition: duration > 0 ? `transform ${duration}ms cubic-bezier(0.16, 0.84, 0.32, 1)` : "none",
+        }}>
+          {items.map((item, i) => (
+            <div key={`${item.name}-${i}`} style={{
+              height: rowHeight,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "0 14px",
+              color: i === safeIndex && !rolling ? accent : "#191F28",
+              fontSize: i === safeIndex && !rolling ? 25 : 22,
+              fontWeight: 900,
+              letterSpacing: -0.7,
+              lineHeight: 1.15,
+              wordBreak: "keep-all",
+              textAlign: "center",
+              textShadow: i === safeIndex && !rolling ? "0 4px 18px rgba(255,107,53,0.22)" : "none",
+            }}>
+              {item.name}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{
+        display: "flex",
+        justifyContent: "center",
+        gap: 6,
+        marginTop: 10,
+      }}>
+        {[0, 1, 2, 3, 4].map((n) => (
+          <span key={n} style={{
+            width: 7,
+            height: 7,
+            borderRadius: "50%",
+            background: rolling && (safeIndex + n) % 2 === 0 ? "#FFD29F" : "rgba(255,210,159,0.35)",
+            boxShadow: rolling && (safeIndex + n) % 2 === 0 ? "0 0 10px rgba(255,210,159,0.85)" : "none",
+          }} />
+        ))}
+      </div>
+    </div>
   );
 }
 
