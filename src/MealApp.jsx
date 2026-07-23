@@ -342,7 +342,7 @@ function MealApp() {
     const runId = randomRunRef.current + 1;
     randomRunRef.current = runId;
     const final = pool[Math.floor(Math.random() * pool.length)];
-    const spinCount = 34 + Math.floor(Math.random() * 10);
+    const spinCount = 48 + Math.floor(Math.random() * 14);
     const sequence = Array.from({ length: spinCount }, () => pool[Math.floor(Math.random() * pool.length)]);
     sequence.push(final);
 
@@ -357,7 +357,7 @@ function MealApp() {
       if (randomRunRef.current !== runId) return;
       i += 1;
       const progress = i / (sequence.length - 1);
-      const duration = 55 + Math.pow(progress, 2.65) * 360;
+      const duration = 44 + Math.pow(progress, 2.15) * 260;
       setSlotDuration(duration);
       setSlotIndex(i);
       setRollResult(sequence[i]);
@@ -374,7 +374,7 @@ function MealApp() {
         return;
       }
 
-      setTimeout(step, duration * 0.72);
+      setTimeout(step, duration * 0.92);
     }
 
     setTimeout(step, 120);
@@ -520,7 +520,7 @@ function MealApp() {
             textAlign: "center", boxShadow: "0 20px 60px rgba(0,0,0,0.25)",
           }}>
             <div style={{ fontSize: 13, fontWeight: 700, color: accent, marginBottom: 14 }}>
-              {rolling ? "777 JACKPOT 돌리는 중…" : "오늘은 이거 어때요?"}
+              {rolling ? "뭐가 나올까?" : "오늘은 이거 어때요?"}
             </div>
             <SlotMachine
               sequence={slotSequence}
@@ -608,49 +608,47 @@ function Card({ children, onClick }) {
 }
 
 function SlotMachine({ sequence, index, duration, rolling, accent }) {
-  const rowHeight = 68;
+  const rowHeight = 64;
   const items = sequence.length > 0 ? sequence : [{ name: "…" }];
   const safeIndex = Math.min(index, items.length - 1);
 
   return (
     <div style={{
-      borderRadius: 22,
-      padding: 8,
-      background: "linear-gradient(180deg, #3A261F 0%, #17110F 100%)",
-      boxShadow: `0 12px 24px rgba(255,107,53,0.18), inset 0 0 0 1px rgba(255,255,255,0.08)`,
+      borderRadius: 20,
+      padding: 6,
+      background: "#FFF7F3",
+      border: "1px solid #FFE0D2",
+      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.85)",
     }}>
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: 10,
-        marginBottom: 8,
-        color: "#FFD29F",
-        fontSize: 16,
-        fontWeight: 900,
-        letterSpacing: 1.2,
-        textShadow: "0 0 10px rgba(255,210,159,0.65)",
-      }}>
-        <span>7</span><span>7</span><span>7</span>
-      </div>
       <div style={{
         position: "relative",
         height: rowHeight,
         overflow: "hidden",
         borderRadius: 16,
-        background: "linear-gradient(180deg, #FFF9F5 0%, #FFFFFF 45%, #FFF1EB 100%)",
-        border: `2px solid ${accent}`,
-        boxShadow: "inset 0 10px 20px rgba(25,31,40,0.08), inset 0 -10px 18px rgba(255,107,53,0.10)",
+        background: "white",
+        boxShadow: "inset 0 8px 20px rgba(25,31,40,0.06), inset 0 -8px 20px rgba(25,31,40,0.04)",
       }}>
         <div style={{
           position: "absolute",
           inset: 0,
           zIndex: 2,
           pointerEvents: "none",
-          background: "linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0) 28%, rgba(255,255,255,0) 72%, rgba(255,241,235,0.94) 100%)",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0.20) 24%, rgba(255,255,255,0) 48%, rgba(255,255,255,0.20) 76%, rgba(255,255,255,0.96) 100%)",
+        }} />
+        <div style={{
+          position: "absolute",
+          left: 14,
+          right: 14,
+          top: "50%",
+          height: 1,
+          transform: "translateY(-50%)",
+          background: "linear-gradient(90deg, rgba(255,107,53,0), rgba(255,107,53,0.28), rgba(255,107,53,0))",
+          zIndex: 3,
+          pointerEvents: "none",
         }} />
         <div style={{
           transform: `translateY(-${safeIndex * rowHeight}px)`,
-          transition: duration > 0 ? `transform ${duration}ms cubic-bezier(0.16, 0.84, 0.32, 1)` : "none",
+          transition: duration > 0 ? `transform ${duration}ms cubic-bezier(0.22, 0.72, 0.18, 1)` : "none",
         }}>
           {items.map((item, i) => (
             <div key={`${item.name}-${i}`} style={{
@@ -660,8 +658,8 @@ function SlotMachine({ sequence, index, duration, rolling, accent }) {
               justifyContent: "center",
               padding: "0 14px",
               color: i === safeIndex && !rolling ? accent : "#191F28",
-              fontSize: i === safeIndex && !rolling ? 25 : 22,
-              fontWeight: 900,
+              fontSize: i === safeIndex && !rolling ? 25 : 23,
+              fontWeight: 850,
               letterSpacing: -0.7,
               lineHeight: 1.15,
               wordBreak: "keep-all",
@@ -672,22 +670,6 @@ function SlotMachine({ sequence, index, duration, rolling, accent }) {
             </div>
           ))}
         </div>
-      </div>
-      <div style={{
-        display: "flex",
-        justifyContent: "center",
-        gap: 6,
-        marginTop: 10,
-      }}>
-        {[0, 1, 2, 3, 4].map((n) => (
-          <span key={n} style={{
-            width: 7,
-            height: 7,
-            borderRadius: "50%",
-            background: rolling && (safeIndex + n) % 2 === 0 ? "#FFD29F" : "rgba(255,210,159,0.35)",
-            boxShadow: rolling && (safeIndex + n) % 2 === 0 ? "0 0 10px rgba(255,210,159,0.85)" : "none",
-          }} />
-        ))}
       </div>
     </div>
   );
